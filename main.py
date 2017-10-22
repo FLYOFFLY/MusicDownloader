@@ -17,12 +17,10 @@ class MyParser(html.parser.HTMLParser):
 	def __init__(self):
 		self.list = {}
 		self.artist_id = 0
-		super(MyParser, self).__init__()
+		super().__init__()
 	def handle_starttag(self, tag, attrs):
 		if "a" in tag:
-			if len(attrs) > 0 and attrs[0][0] == "class":
-				if len(attrs) <= 1:
-					return
+			if len(attrs) > 1 and attrs[0][0] == "class":
 				path = attrs[1][1];
 				if attrs[0] == ATRB_MUSIC:
 					for LINK_MUSIC in LINK_MUSICS:
@@ -45,10 +43,10 @@ class ParserMusic(html.parser.HTMLParser):
 	def __init__(self,artist_id):
 		self.list = []
 		self.artist_id = artist_id
-		super(ParserMusic,self).__init__()
+		super().__init__()
 	def handle_starttag(self, tag, attrs):
 		if "a" in tag:
-			if len(attrs)>0 and attrs[0] == ATRB_MUSICURL and len(attrs)>1 and '/info?' in attrs[1][1]:
+			if len(attrs)>1 and attrs[0] == ATRB_MUSICURL and '/info?' in attrs[1][1]:
 				parserart = MyParser()
 				parserart.feed(str(urllib.request.urlopen(LINK_SITE+attrs[1][1]).read()))
 				for r in parserart.list.values():
@@ -59,10 +57,10 @@ class ParserAlbium(html.parser.HTMLParser):
 	def __init__(self,artist_id):
 		self.list = {}
 		self.artist_id = artist_id
-		super(ParserAlbium,self).__init__()
+		super().__init__()
 	def handle_starttag(self, tag, attrs):
 		if "a" in tag:
-			if len(attrs)>0 and attrs[0] == ATRB_ALBULMURL and len(attrs)>1 and '/album?' in attrs[1][1]:
+			if len(attrs)>1 and attrs[0] == ATRB_ALBULMURL and '/album?' in attrs[1][1]:
 				parserart = ParserMusic(self.artist_id)
 				parserart.feed(str(urllib.request.urlopen(LINK_SITE+attrs[1][1]).read()))
 				try:
